@@ -51,3 +51,21 @@ h1 {
     font-size: 1.2em;
     color: #666;
 }
+/* Stil för input-container */
+#input-container {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+#auction-url {
+    padding: 8px;
+    font-size: 1em;
+    flex: 1;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 1em;
+    cursor: pointer;
+}

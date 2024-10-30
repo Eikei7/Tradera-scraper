@@ -8,6 +8,12 @@
 </head>
 <body>
     <h1>Tradera-auktioner</h1>
+
+    <div id="input-container">
+        <input type="text" id="auction-url" placeholder="Lägg till auktions-URL">
+        <button onclick="addAuction()">Skicka</button>
+    </div>
+
     <div id="views-container"></div>
 
     <script>
@@ -21,18 +27,41 @@
                 container.innerHTML = ''; // Töm tidigare innehåll
 
                 data.forEach(item => {
-    const viewElement = document.createElement('div');
-    viewElement.classList.add('view-item');
-    viewElement.innerHTML = `
-        <h2 class="view-title">${item.title}</h2>
-        <p class="view-count">${item.views}</p>
-        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
-    `;
-    container.appendChild(viewElement);
-});
-
+                    const viewElement = document.createElement('div');
+                    viewElement.classList.add('view-item');
+                    viewElement.innerHTML = `
+                        <h2 class="view-title">${item.title}</h2>
+                        <p class="view-count">${item.views}</p>
+                        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
+                    `;
+                    container.appendChild(viewElement);
+                });
             } catch (error) {
                 console.error('Error fetching view data:', error);
+            }
+        }
+
+        // Lägger till ny auktion via POST-anrop
+        async function addAuction() {
+            const url = document.getElementById('auction-url').value;
+            if (!url) return alert('Vänligen ange en giltig URL');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/add-auction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    fetchViews(); // Uppdatera listan med auktioner
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                console.error('Error adding auction URL:', error);
             }
         }
 
