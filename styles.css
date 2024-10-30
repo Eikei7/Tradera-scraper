@@ -47,7 +47,7 @@ h1 {
 }
 
 /* Stil för visningsräknare */
-.view-count {
-    font-size: 1.4em;
+.view-count, .view-bid {
+    font-size: 1.2em;
     color: #666;
 }
