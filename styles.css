@@ -1,0 +1,53 @@
+/* Grundinställningar */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container för visningsdata */
+#views-container {
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Stil för rubrik */
+h1 {
+    text-align: center;
+    color: #444;
+}
+
+/* Stil för varje objekt */
+.view-item {
+    padding: 15px;
+    margin: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.view-item:last-child {
+    border-bottom: none;
+}
+
+/* Stil för titlar */
+.view-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* Stil för visningsräknare */
+.view-count {
+    font-size: 1.4em;
+    color: #666;
+}

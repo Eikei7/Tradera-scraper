@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visningar från Tradera</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Antal Visningar</h1>
+    <h1>Tradera-auktioner</h1>
     <div id="views-container"></div>
 
     <script>
@@ -20,10 +21,16 @@
                 container.innerHTML = ''; // Töm tidigare innehåll
 
                 data.forEach(item => {
-                    const viewElement = document.createElement('div');
-                    viewElement.innerHTML = `<h2>${item.title}</h2><p>Antal visningar: ${item.views}</p>`;
-                    container.appendChild(viewElement);
-                });
+    const viewElement = document.createElement('div');
+    viewElement.classList.add('view-item');
+    viewElement.innerHTML = `
+        <h2 class="view-title">${item.title}</h2>
+        <p class="view-count">${item.views}</p>
+        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
+    `;
+    container.appendChild(viewElement);
+});
+
             } catch (error) {
                 console.error('Error fetching view data:', error);
             }
