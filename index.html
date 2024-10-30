@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visningar från Tradera</title>
+</head>
+<body>
+    <h1>Antal Visningar</h1>
+    <div id="views-container"></div>
+
+    <script>
+        // Hämtar data från API:et och visar det på sidan
+        async function fetchViews() {
+            try {
+                const response = await fetch('http://localhost:3000/api/views');
+                const data = await response.json();
+
+                const container = document.getElementById('views-container');
+                container.innerHTML = ''; // Töm tidigare innehåll
+
+                data.forEach(item => {
+                    const viewElement = document.createElement('div');
+                    viewElement.innerHTML = `<h2>${item.title}</h2><p>Antal visningar: ${item.views}</p>`;
+                    container.appendChild(viewElement);
+                });
+            } catch (error) {
+                console.error('Error fetching view data:', error);
+            }
+        }
+
+        // Kör fetchViews när sidan laddas
+        fetchViews();
+    </script>
+</body>
+</html>
