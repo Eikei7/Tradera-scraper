@@ -1,19 +1,37 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser'); // Lägg till bodyParser för att hantera POST-data
+const bodyParser = require('body-parser');
+const fs = require('fs');
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(bodyParser.json()); // Middleware för att läsa JSON-data
+app.use(bodyParser.json());
 
-// Initiala auktioner
-let urls = [
-    'https://www.tradera.com/item/3011/648568125/grim-fandango-pc-big-box-endast-box-och-manual-',
-    'https://www.tradera.com/item/308373/648568890/escape-from-monkey-island-pc-big-box',
-    'https://www.tradera.com/item/308373/648568347/the-curse-of-monkey-island-pc-big-box-official-strategy-guide'
-];
+// Ladda URL:erna från auctions.json
+let urls = [];
+function loadURLs() {
+    try {
+        const data = fs.readFileSync('auctions.json', 'utf-8');
+        urls = JSON.parse(data);
+    } catch (error) {
+        console.error('Error loading URLs:', error);
+        urls = [];
+    }
+}
+
+// Spara URL:erna till auctions.json
+function saveURLs() {
+    try {
+        fs.writeFileSync('auctions.json', JSON.stringify(urls, null, 2));
+    } catch (error) {
+        console.error('Error saving URLs:', error);
+    }
+}
+
+// Läs in URL:erna när servern startas
+loadURLs();
 
 async function scrapeViews() {
     const browser = await puppeteer.launch({ headless: true });
@@ -40,7 +58,7 @@ async function scrapeViews() {
             });
 
             await page.close();
-            return { title, views, currentBid, url }; // Lägg till URL här
+            return { title, views, currentBid, url };
         });
 
         const results = await Promise.all(scrapePromises);
@@ -52,7 +70,6 @@ async function scrapeViews() {
         return [];
     }
 }
-
 
 // GET Endpoint för att hämta auktioner
 app.get('/api/views', async (req, res) => {
@@ -69,6 +86,7 @@ app.post('/api/add-auction', (req, res) => {
     const { url } = req.body;
     if (url && !urls.includes(url)) {
         urls.push(url);
+        saveURLs(); // Spara den nya listan till JSON-filen
         res.status(200).json({ message: 'Auction URL added successfully' });
     } else {
         res.status(400).json({ error: 'Invalid URL or URL already exists' });
