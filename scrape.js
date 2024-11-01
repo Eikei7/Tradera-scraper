@@ -40,7 +40,7 @@ async function scrapeViews() {
             });
 
             await page.close();
-            return { title, views, currentBid };
+            return { title, views, currentBid, url }; // Lägg till URL här
         });
 
         const results = await Promise.all(scrapePromises);
@@ -52,6 +52,7 @@ async function scrapeViews() {
         return [];
     }
 }
+
 
 // GET Endpoint för att hämta auktioner
 app.get('/api/views', async (req, res) => {

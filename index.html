@@ -27,15 +27,21 @@
                 container.innerHTML = ''; // Töm tidigare innehåll
 
                 data.forEach(item => {
-                    const viewElement = document.createElement('div');
-                    viewElement.classList.add('view-item');
-                    viewElement.innerHTML = `
-                        <h2 class="view-title">${item.title}</h2>
-                        <p class="view-count">${item.views}</p>
-                        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
-                    `;
-                    container.appendChild(viewElement);
-                });
+    console.log(item); // Logga varje objekt för att kontrollera att url finns
+
+    const viewElement = document.createElement('div');
+    viewElement.classList.add('view-item');
+    viewElement.innerHTML = `
+        <h2 class="view-title">
+            <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+        </h2>
+        <p class="view-count">${item.views}</p>
+        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
+    `;
+    container.appendChild(viewElement);
+});
+
+
             } catch (error) {
                 console.error('Error fetching view data:', error);
             }
