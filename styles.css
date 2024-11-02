@@ -30,6 +30,11 @@ h1 {
     text-align: center;
     color: #444;
 }
+p {
+    text-align: center;
+    color: #666;
+    width: 600px;
+}
 
 /* Stil för varje objekt */
 .view-item {
@@ -54,6 +59,7 @@ h1 {
 .view-count, .view-bid {
     font-size: 1.2em;
     color: #666;
+    margin: 0;
 }
 /* Stil för input-container */
 #input-container {

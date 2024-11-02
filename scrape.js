@@ -30,7 +30,7 @@ function saveURLs() {
     }
 }
 
-// Läs in URL:erna när servern startas
+// Läs in URL:erna vid start
 loadURLs();
 
 async function scrapeViews() {
@@ -90,6 +90,18 @@ app.post('/api/add-auction', (req, res) => {
         res.status(200).json({ message: 'Auction URL added successfully' });
     } else {
         res.status(400).json({ error: 'Invalid URL or URL already exists' });
+    }
+});
+
+// DELETE Endpoint för att ta bort en auktions-URL
+app.delete('/api/remove-auction', (req, res) => {
+    const { url } = req.body;
+    if (url && urls.includes(url)) {
+        urls = urls.filter(existingUrl => existingUrl !== url);
+        saveURLs(); // Uppdatera JSON-filen efter borttagning
+        res.status(200).json({ message: 'Auction URL removed successfully' });
+    } else {
+        res.status(400).json({ error: 'URL not found in the list' });
     }
 });
 

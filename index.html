@@ -8,6 +8,11 @@
 </head>
 <body>
     <h1>Tradera-auktioner</h1>
+    <p>Här kan du lägga till auktioner från Tradera.</br>
+    För att lägga till en auktion, skriv in URL:en i fältet nedan och klicka på "Skicka".</br>
+    Vill du ta bort en auktion, klicka på "Ta bort".</br>
+    (Observera att det kan ta några sekunder innan auktionerna visas på sidan.)
+    </p>
 
     <div id="input-container">
         <input type="text" id="auction-url" placeholder="Lägg till auktions-URL">
@@ -19,33 +24,51 @@
     <script>
         // Hämtar data från API:et och visar det på sidan
         async function fetchViews() {
-            try {
-                const response = await fetch('http://localhost:3000/api/views');
-                const data = await response.json();
+    try {
+        const response = await fetch('http://localhost:3000/api/views');
+        const data = await response.json();
 
-                const container = document.getElementById('views-container');
-                container.innerHTML = ''; // Töm tidigare innehåll
+        const container = document.getElementById('views-container');
+        container.innerHTML = ''; // Töm tidigare innehåll
 
-                data.forEach(item => {
-    console.log(item); // Logga varje objekt för att kontrollera att url finns
+        data.forEach(item => {
+            const viewElement = document.createElement('div');
+            viewElement.classList.add('view-item');
+            viewElement.innerHTML = `
+                <h2 class="view-title">
+                    <a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+                </h2>
+                <p class="view-count">${item.views}</p>
+                <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
+                <button onclick="removeAuction('${item.url}')">Ta bort</button>
+            `;
+            container.appendChild(viewElement);
+        });
+    } catch (error) {
+        console.error('Error fetching view data:', error);
+    }
+}
 
-    const viewElement = document.createElement('div');
-    viewElement.classList.add('view-item');
-    viewElement.innerHTML = `
-        <h2 class="view-title">
-            <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">${item.title}</a>
-        </h2>
-        <p class="view-count">${item.views}</p>
-        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
-    `;
-    container.appendChild(viewElement);
-});
+// Funktion för att ta bort en auktion
+async function removeAuction(url) {
+    try {
+        const response = await fetch('http://localhost:3000/api/remove-auction', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
 
-
-            } catch (error) {
-                console.error('Error fetching view data:', error);
-            }
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+            fetchViews(); // Uppdatera listan med auktioner
+        } else {
+            alert(result.error);
         }
+    } catch (error) {
+        console.error('Error removing auction URL:', error);
+    }
+}
 
         // Lägger till ny auktion via POST-anrop
         async function addAuction() {
