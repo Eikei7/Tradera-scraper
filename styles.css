@@ -59,7 +59,8 @@ p {
 .view-count, .view-bid {
     font-size: 1.2em;
     color: #666;
-    margin: 0;
+    margin: 10px 0;
+    text-align: left;
 }
 /* Stil för input-container */
 #input-container {
