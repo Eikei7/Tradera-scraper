@@ -32,18 +32,21 @@
         container.innerHTML = ''; // Töm tidigare innehåll
 
         data.forEach(item => {
-            const viewElement = document.createElement('div');
-            viewElement.classList.add('view-item');
-            viewElement.innerHTML = `
-                <h2 class="view-title">
-                    <a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>
-                </h2>
-                <p class="view-count">${item.views}</p>
-                <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
-                <button onclick="removeAuction('${item.url}')">Ta bort</button>
-            `;
-            container.appendChild(viewElement);
-        });
+    const viewElement = document.createElement('div');
+    viewElement.classList.add('view-item');
+    viewElement.setAttribute('data-url', item.url); // Lägg till data-url-attribut
+
+    viewElement.innerHTML = `
+        <h2 class="view-title">
+            <a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+        </h2>
+        <p class="view-count">${item.views}</p>
+        <p class="view-bid">Aktuellt bud: ${item.currentBid}</p>
+        <button onclick="removeAuction('${item.url}')">Ta bort</button>
+    `;
+    container.appendChild(viewElement);
+});
+
     } catch (error) {
         console.error('Error fetching view data:', error);
     }
@@ -61,7 +64,11 @@ async function removeAuction(url) {
         const result = await response.json();
         if (response.ok) {
             alert(result.message);
-            fetchViews(); // Uppdatera listan med auktioner
+            // Hitta och ta bort det specifika elementet i DOM
+            const auctionElement = document.querySelector(`[data-url="${url}"]`);
+            if (auctionElement) {
+                auctionElement.remove();
+            }
         } else {
             alert(result.error);
         }
@@ -69,6 +76,7 @@ async function removeAuction(url) {
         console.error('Error removing auction URL:', error);
     }
 }
+
 
         // Lägger till ny auktion via POST-anrop
         async function addAuction() {
